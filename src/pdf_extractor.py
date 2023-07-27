@@ -1,6 +1,7 @@
 import os
 import re
 from pdfminer.high_level import extract_text
+import pandas as pd
 
 pdf_path = "./exemplo/NFSE_38_75011_2_1.pdf"
 
@@ -48,11 +49,27 @@ print("ISSQN:", issqn_value)
 print("Local de Incidência do ISS:", local_value)
 
 
-    # data_patterns = {
-    #     "nf": nf,
-    #     "data_fato_gerador": data_fato_gerador,
-    #     "valor_total": valor_total,
-    #     "issrf": issrf,
-    #     "issqn": issqn,
-    #     "local": local
-    # }
+data_patterns = {
+    "Número da NFS-e": numero_nf,
+    "Data Fato Gerador": data,
+    "Valor Total": valor,
+    "ISSRF": issrf_value,
+    "ISSQN": issqn_value,
+    "Local de Incidência do ISS": local_value
+}
+
+
+
+def create_spreadsheet(sheet_data, output_file):
+    fields = ["Número da NFS-e", "Data Fato Gerador", "Valor Total", "ISSRF", "ISSQN", "Local de Incidência do ISS"]
+
+    df = pd.DataFrame([sheet_data], columns=fields)
+
+    output_folder = os.path.join(".", "output")
+    os.makedirs(output_folder, exist_ok=True)
+
+    output_path = os.path.join(output_folder, output_file)
+    df.to_excel(output_path, index=False)
+
+
+create_spreadsheet(data_patterns, "teste.xlsx")
