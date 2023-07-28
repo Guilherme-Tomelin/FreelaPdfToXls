@@ -5,8 +5,11 @@ et-xmlfile==1.1.0
 numpy==1.25.1
 openpyxl==3.1.2
 pandas==2.0.3
-pdfminer.six==20221105
+pdfplumber==0.10.1
+Pillow==10.0.0
 pycparser==2.21
+PyPDF2==3.0.1
+pypdfium2==4.18.0
 python-dateutil==2.8.2
 pytz==2023.3
 six==1.16.0
