@@ -37,16 +37,30 @@ class InformationExtractor:
             dict: A dictionary containing extracted information with keys as the information names.
                 If no information is found, an empty dictionary is returned.
         """
+
+
+        keywords = ["Encruzilhada", "Ivoti", "OutraCidade", "MaisUmaCidade"]
+
         patterns = {
             "Número da NFS-e": r'Número da NFS-e\s*(\d+)',
             "Data Fato Gerador": r'Data Fato Gerador\s*(\d{2}/\d{2}/\d{4})',
             "Valor Total": r'Valor Total\s*(\d{1,3}(?:\.\d{3})*(?:,\d{2}))',
             "ISSRF": r'ISSRF\s*(\d{1,3}(?:\.\d{3})*(?:,\d{2}))',
             "ISSQN": r'ISSQN\s*(\d{1,3}(?:\.\d{3})*(?:,\d{2}))',
-            "Local de Incidência do ISS": r'Local de Incidência do ISS\s*\d{4}\s+(.*)',
+            "Local de Incidência do ISS": r'Local de Incidência do ISS\s*\d{4}\s+([^0-9\n]*)',
+            "Local de Incidência do ISS (opção 2)": r'Local de Incidência do ISS\s+(\d+)\s+.*\n(.+)',
+            
         }
 
-        return {field: self._search_pattern(pattern) for field, pattern in patterns.items()}
+        data = {}
+        for field, pattern in patterns.items():
+            match = re.search(pattern, self.text)
+            if match:
+                data[field] = match.group(1).strip()
+            else:
+                data[field] = None
+
+        return data
 
 class SpreadsheetCreator:
     def __init__(self, sheet_data_list, output_file):
